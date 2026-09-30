@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>C# – نموونەکانی Visual Programming</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;padding:20px;direction:rtl}
+.container{max-width:1200px;margin:0 auto}
+.tabs{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;justify-content:center}
+.tab{padding:12px 22px;background:rgba(255,255,255,.2);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:15px;font-weight:bold;transition:all .3s;backdrop-filter:blur(10px)}
+.tab:hover{background:rgba(255,255,255,.3);transform:translateY(-2px)}
+.tab.active{background:#fff;color:#667eea;box-shadow:0 4px 15px rgba(0,0,0,.2)}
+.content{display:none}.content.active{display:block;animation:fadeIn .4s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.example{background:#fff;border-radius:12px;padding:24px;margin-bottom:24px;box-shadow:0 8px 28px rgba(0,0,0,.18)}
+.title-row{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.example-title{flex:1;background:linear-gradient(135deg,#e0f2fe,#bae6fd);padding:14px 18px;border-radius:8px;font-size:17px;font-weight:bold;color:#0c4a6e}
+.pdf-page{background:#f97316;color:#fff;font-size:11px;font-weight:bold;padding:5px 11px;border-radius:20px;white-space:nowrap;direction:ltr;box-shadow:0 2px 6px rgba(249,115,22,.35)}
+.code-box{background:#1e1e1e;border-radius:10px;margin-bottom:18px;overflow:hidden;border:1px solid #333;display:flex;direction:ltr}
+.line-numbers{background:#2d2d2d;border-left:4px solid #5cb85c;padding:18px 0;min-width:42px;text-align:center;font-family:Consolas,Monaco,monospace;font-size:15px;color:#858585;line-height:1.7;user-select:none;flex-shrink:0}
+.line-numbers span{display:block;padding:0 8px}
+.code-content{padding:18px 20px;overflow-x:auto;flex:1}
+.code-content pre{font-family:Consolas,Monaco,monospace;line-height:1.7;white-space:pre;color:#e2e8f0;font-size:15px;text-align:left}
+.kw{color:#d4a574;font-weight:700}.dt{color:#bb86fc;font-weight:700}.con{color:#4fc3f7;font-weight:600}.num{color:#b5cea8}.str{color:#ce9178}.cmt{color:#6a9955;font-style:italic}
+.output-box{background:linear-gradient(135deg,#dbeafe,#bfdbfe);border:2px solid #3b82f6;border-radius:8px;padding:14px 18px;margin-bottom:18px;direction:ltr;overflow-x:auto}
+.output-header{font-weight:bold;color:#1e40af;margin-bottom:8px;font-size:15px}
+.output-content{color:#1e3a8a;font-family:Consolas,monospace;font-size:14px;line-height:1.8;white-space:pre;text-align:left}
+.expl-box{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #86efac;border-right:6px solid #22c55e;border-radius:14px;padding:22px 24px}
+.expl-title{font-weight:800;color:#166534;margin-bottom:14px;font-size:16px;border-bottom:2px dashed #86efac;padding-bottom:10px}
+.expl-box ul{list-style:none}
+.expl-box li{margin-bottom:11px;line-height:2;font-size:15px;color:#1c1917;padding:10px 14px;background:#fff;border-radius:9px;border-right:4px solid #22c55e;display:flex;gap:10px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.rng{flex-shrink:0;min-width:36px;height:24px;line-height:22px;text-align:center;background:#dcfce7;color:#166534;font-weight:800;border:1.5px solid #22c55e;border-radius:5px;padding:0 6px;font-size:13px;margin-top:6px}.sn{direction:ltr;unicode-bidi:isolate;font-family:Consolas,monospace;font-size:13px;display:inline-block;max-width:100%;overflow-x:auto;white-space:nowrap;vertical-align:middle}.sn.sm{font-size:10px}
+.ln{background:#22c55e;color:#fff;font-weight:700;font-size:13px;padding:0 10px;border-radius:20px;height:26px;line-height:26px;flex-shrink:0;margin-top:5px;direction:ltr}
+.expl-box b{color:#0369a1;background:#dbeafe;padding:1px 7px;border-radius:5px;direction:ltr;display:inline-block;font-family:Consolas,monospace;font-size:13px}
+.expl-box code{background:#1e1e1e;color:#ce9178;padding:2px 7px;border-radius:5px;font-size:13px;font-family:Consolas,monospace;direction:ltr;display:inline-block}
+.intro{background:#fff;border-radius:12px;padding:30px;text-align:center;box-shadow:0 8px 28px rgba(0,0,0,.18)}
+.intro h2{color:#667eea;margin-bottom:18px;font-size:1.9em}.intro p{color:#4b5563;line-height:1.8;margin-bottom:12px}
+.expl-box li{flex-direction:column;align-items:flex-start;gap:6px}
+.expl-box li>span:last-child{width:100%}
+.expl-box .rng{min-width:30px;height:20px;line-height:18px;font-size:12px;padding:0 5px;border-radius:4px;margin-top:0}
+.expl-box .sn{display:block;width:fit-content;max-width:100%;margin-bottom:6px;white-space:pre;text-align:left}
+.expl-box .sn{overflow:visible;overflow-x:visible;white-space:normal;overflow-wrap:anywhere}
+.sn.xs{font-size:8px}
+.cls{color:#4ec9b0}.fn{color:#dcdcaa}.var{color:#9cdcfe}.op{color:#ff79c6}
+.more-btn{display:block;width:100%;margin-top:16px;padding:14px;border:none;border-radius:10px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-size:16px;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 14px rgba(102,126,234,.35)}
+.more-panel{display:none;margin-top:14px;background:#f5f3ff;border:1.5px solid #c4b5fd;border-right:6px solid #7c3aed;border-radius:14px;padding:20px}
+.more-panel.open{display:block;animation:fadeIn .4s}
+.more-title{font-weight:800;color:#5b21b6;font-size:16px;margin-bottom:10px}
+.more-intro,.more-sum{line-height:2;color:#1c1917;font-size:15px;margin-bottom:14px}
+.more-panel code{background:#1e1e1e;color:#ce9178;padding:2px 7px;border-radius:5px;font-size:13px;font-family:Consolas,monospace;direction:ltr;display:inline-block}
+.st{background:#fff;border:1.5px solid #ddd6fe;border-right:5px solid #7c3aed;border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.st-h{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.st-h .rng{margin-top:0;min-width:30px;height:20px;line-height:18px;font-size:12px;padding:0 5px;border-radius:4px}
+.st-h .sn{white-space:normal;overflow:visible;overflow-wrap:anywhere;background:#dbeafe;color:#0369a1;padding:1px 7px;border-radius:5px}
+.st p{line-height:2;font-size:15px;color:#1c1917;margin-bottom:8px}
+.st-v{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px;color:#6b7280}
+.vs{font-style:normal;background:#ede9fe;color:#4c1d95;border-radius:6px;padding:1px 8px;font-family:Consolas,monospace;direction:ltr;font-size:13px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="container">
+<div style="text-align:center;color:#fff;margin-bottom:30px">
+<h1 style="font-size:2.4em;text-shadow:2px 2px 4px rgba(0,0,0,.3);margin-bottom:10px">💻 نموونەکانی C#</h1>
+<h2 style="font-size:1.4em;font-weight:400">ئۆپەراتۆر، مەرج، لووپ و میسۆدەکان</h2>
+<p style="opacity:.9">Introduction to Visual Programming — PDF P.18–37</p>
+</div>
+<div class="tabs" id="tabs"></div>
+<div id="views"></div>
+</div>
+<script>
+const E=[
+{t:'Arithmetic Operators – ئۆپەراتۆری ماتماتیکی',p:'PDF P.18-19',
+c:`// ئۆپەراتۆری + بۆ کۆکردنەوەی دوو بەهایە
+int x = 10 + 20;
+// دەتوانرێت گۆڕاو و بەهاش کۆبکرێنەوە
+int sum1 = 100 + 50;      // 150 (100 + 50)
+int sum2 = sum1 + 250;    // 400 (150 + 250)
+int sum3 = sum2 + sum2;   // 800 (400 + 400)`,
+o:`(No output)
+-- Console.WriteLine بەکارنەهاتووە، بۆیە هیچ نیشان نادرێت`},
+{t:'Assignment Operators – ئۆپەراتۆری بەهادان',p:'PDF P.19-20',
+c:`int x = 10;   // = بەهای 10 دەدات بە x
+x += 5;       // x = x + 5`,
+o:`(No output)
+-- Console.WriteLine بەکارنەهاتووە، بۆیە هیچ نیشان نادرێت`},
+{t:'Comparison & Logical Operators – بەراوردکردن و لۆژیک',p:'PDF P.20-21',
+c:`int x = 3;
+// ئۆپەراتۆری بەراوردکردن
+Console.WriteLine(x == 3);
+Console.WriteLine(x != 3);
+Console.WriteLine(x >= 5);
+// ئۆپەراتۆری لۆژیکی
+Console.WriteLine(x < 5 && x < 10);
+Console.WriteLine(x < 5 || x < 2);
+Console.WriteLine(!(x < 5 && x < 10));`,
+o:`True
+False
+False
+True
+True
+False`},
+{t:'The if Statement – فەرمانی if',p:'PDF P.22',
+c:`int x = 20;
+int y = 18;
+
+if (x > y)
+{
+  Console.WriteLine("x is greater than y");
+}`,
+o:`x is greater than y`},
+{t:'else & else if – ئەگەرنا',p:'PDF P.23-24',
+c:`// شێوازی گشتی (Syntax)
+if (condition1)
+{
+  // کۆد ئەگەر condition1 ڕاست بێت
+}
+else if (condition2)
+{
+  // کۆد ئەگەر condition1 هەڵە و condition2 ڕاست بێت
+}
+else
+{
+  // کۆد ئەگەر condition1 و condition2 هەردووکیان هەڵە بن
+}
+
+// نموونە
+int time = 22;
+if (time < 10)
+{
+  Console.WriteLine("Good morning.");
+}
+else if (time < 20)
+{
+  Console.WriteLine("Good day.");
+}
+else
+{
+  Console.WriteLine("Good evening.");
+}`,
+o:`Good evening.`},
+{t:'Short Hand If...Else (Ternary) – شێوازی کورتی if',p:'PDF P.24-25',
+c:`// شێوازی گشتی (Syntax)
+variable = (condition) ? expressionTrue : expressionFalse;
+
+// شێوازی درێژ
+int time = 20;
+if (time < 18)
+{
+  Console.WriteLine("Good day.");
+}
+else
+{
+  Console.WriteLine("Good evening.");
+}
+
+// شێوازی کورت (Ternary)
+string result = (time < 18) ? "Good day." : "Good evening.";
+Console.WriteLine(result);`,
+o:`Good evening.
+Good evening.`},
+{t:'Switch Statement – فەرمانی switch',p:'PDF P.25-27',
+c:`// شێوازی گشتی (Syntax)
+switch(expression)
+{
+  case x:
+    // code block
+    break;
+  case y:
+    // code block
+    break;
+  default:
+    // code block
+    break;
+}
+
+// نموونە
+int day = 4;
+switch (day)
+{
+  case 1:
+    Console.WriteLine("Monday");
+    break;
+  case 2:
+    Console.WriteLine("Tuesday");
+    break;
+  case 3:
+    Console.WriteLine("Wednesday");
+    break;
+  case 4:
+    Console.WriteLine("Thursday");
+    break;
+  case 5:
+    Console.WriteLine("Friday");
+    break;
+  case 6:
+    Console.WriteLine("Saturday");
+    break;
+  case 7:
+    Console.WriteLine("Sunday");
+    break;
+}`,
+o:`Thursday`},
+{t:'The default Keyword – وشەی default',p:'PDF P.27',
+c:`int day = 4;
+switch (day)
+{
+  case 6:
+    Console.WriteLine("Today is Saturday.");
+    break;
+  case 7:
+    Console.WriteLine("Today is Sunday.");
+    break;
+  default:
+    Console.WriteLine("Looking forward to the Weekend.");
+    break;
+}`,
+o:`Looking forward to the Weekend.`},
+{t:'For & Foreach Loop – لووپی for و foreach',p:'PDF P.28-29',
+c:`// شێوازی گشتی (Syntax)
+for (statement 1; statement 2; statement 3)
+{
+  // کۆدی جێبەجێکردن
+}
+
+foreach (type variableName in arrayName)
+{
+  // کۆدی جێبەجێکردن
+}
+
+// نموونە
+// for: کاتێک ژمارەی دووبارەبوونەوە دیارە
+for (int i = 0; i < 5; i++)
+{
+  Console.WriteLine(i);
+}
+
+// foreach: بۆ ڕیزکردنی ئەندامەکانی ئارەی
+string[] cars = {"Volvo", "BMW", "Ford", "Mazda"};
+foreach (string i in cars)
+{
+  Console.WriteLine(i);
+}`,
+o:`0
+1
+2
+3
+4
+Volvo
+BMW
+Ford
+Mazda`},
+{t:'While & Do/While Loop – لووپی while و do/while',p:'PDF P.29-30',
+c:`// شێوازی گشتی (Syntax)
+while (condition)
+{
+  // کۆدی جێبەجێکردن
+}
+
+do
+{
+  // کۆدی جێبەجێکردن
+}
+while (condition);
+
+// نموونە
+// while: تا مەرجەکە ڕاست بێت دووبارە دەبێتەوە
+int i = 0;
+while (i < 5)
+{
+  Console.WriteLine(i);
+  i++;
+}
+
+// do/while: یەکجار دەخوێنرێت پێش تاقیکردنەوەی مەرج
+int j = 0;
+do
+{
+  Console.WriteLine(j);
+  j++;
+}
+while (j < 5);`,
+o:`0
+1
+2
+3
+4
+0
+1
+2
+3
+4`},
+{t:'Break & Continue in For Loop',p:'PDF P.31-32',
+c:`// break: لە لووپ دەردەچێت کاتێک i == 4
+for (int i = 0; i < 10; i++)
+{
+  if (i == 4)
+  {
+    break;
+  }
+  Console.WriteLine(i);
+}
+
+// continue: تەنها ئەم دووبارەبوونەوەیە بازدەدات
+for (int i = 0; i < 10; i++)
+{
+  if (i == 4)
+  {
+    continue;
+  }
+  Console.WriteLine(i);
+}`,
+o:`-- break:
+0 1 2 3
+
+-- continue:
+0 1 2 3 5 6 7 8 9`},
+{t:'Break & Continue in While Loop',p:'PDF P.32-33',
+c:`// Break Example
+int i = 0;
+while (i < 10)
+{
+  Console.WriteLine(i);
+  i++;
+  if (i == 4)
+  {
+    break;
+  }
+}
+
+// Continue Example
+int i = 0;
+while (i < 10)
+{
+  if (i == 4)
+  {
+    i++;
+    continue;
+  }
+  Console.WriteLine(i);
+  i++;
+}`,
+o:`-- Break Example:
+0 1 2 3
+
+-- Continue Example:
+0 1 2 3 5 6 7 8 9`},
+{t:'C# Math – میسۆدەکانی Math',p:'PDF P.34-35',
+c:`// شێوازی بانگکردن
+ClassName.MethodName(argument);
+
+// نموونە
+class Program
+{
+  static void Main(string[] args)
+  {
+    Console.WriteLine(Math.Max(5, 10));
+    Console.WriteLine(Math.Min(5, 10));
+    Console.WriteLine(Math.Sqrt(64));
+  }
+}`,
+o:`10
+5
+8`},
+{t:'C# Methods – دروستکردن و بانگکردنی میسۆد',p:'PDF P.36-37',
+c:`// دروستکردنی میسۆد
+class Program
+{
+  static void MyMethod()
+  {
+    // کۆدی جێبەجێکردن
+  }
+}
+
+// نموونەی بانگکردن (چەند جار)
+static void MyMethod()
+{
+  Console.WriteLine("I just got executed!");
+}
+
+static void Main(string[] args)
+{
+  MyMethod();
+  MyMethod();
+  MyMethod();
+}`,
+o:`I just got executed!
+I just got executed!
+I just got executed!`}
+];
+const EX=[
+[['int x = 10 + 20;','جۆری <code>int</code> واتە ژمارەی تەواو. گۆڕاوی <code>x</code> دروست دەکات و ئەنجامی 10+20 (30) تێیدا هەڵدەگرێت.'],
+['int sum1 = 100 + 50;','گۆڕاوی <code>sum1</code> دروست دەکات، 100 لەگەڵ 50 کۆدەکاتەوە و بەهاکەی 150 دەبێت.'],
+['int sum2 = sum1 + 250;','بەهای <code>sum1</code> (150) لەگەڵ 250 کۆدەکاتەوە و دەبێتە 400.'],
+['int sum3 = sum2 + sum2;','دوو گۆڕاو لەگەڵ یەکتر کۆدەکاتەوە (400+400) و دەبێتە 800.'],
+[null,'ئۆپەراتۆرەکانی تر: <code>-</code> <code>*</code> <code>/</code> <code>%</code> (ماوەی دابەشکردن) <code>++</code> (یەک زیاد) <code>--</code> (یەک کەم).'],
+[null,'⚠️ ئەم کۆدە هیچ نیشان نادات چونکە <code>Console.WriteLine</code> نییە. بۆ بینینی بەهاکان بنووسە <code>Console.WriteLine(sum3);</code>']],
+[['int x = 10;','گۆڕاوی <code>x</code> دروست دەکات و بەهای 10 دەداتێ (<code>=</code> بەها دەدات).'],
+['x += 5;','واتە <code>x = x + 5</code>؛ 5 زیاد دەکات بۆ بەهای ئێستای x (10) و دەبێتە 15.'],
+[null,'هاوشێوەکانی: <code>-=</code> <code>*=</code> <code>/=</code> <code>%=</code> <code>&amp;=</code> <code>|=</code> <code>^=</code> <code>&gt;&gt;=</code> <code>&lt;&lt;=</code>'],
+[null,'⚠️ ئەم کۆدە هیچ نیشان نادات چونکە <code>Console.WriteLine</code> نییە. بۆ بینینی x بنووسە <code>Console.WriteLine(x);</code> (دەرەنجام 15).']],
+[['int x = 3;','گۆڕاوی <code>x</code> دروست دەکات و 3 دەیداتێ.'],
+['Console.WriteLine(x == 3);','<code>==</code> دەپرسێت x یەکسانە بە 3؟ بەڵێ، بۆیە <b>True</b> چاپ دەکات.'],
+['Console.WriteLine(x != 3);','<code>!=</code> واتە یەکسان نییە؟ x یەکسانە بە 3، بۆیە <b>False</b>.'],
+['Console.WriteLine(x >= 5);','3 گەورەترە یان یەکسانە بە 5؟ نەخێر، <b>False</b>.'],
+['Console.WriteLine(x < 5 && x < 10);','<code>&amp;&amp;</code> (and) هەردوو مەرج ڕاستن (3 &lt; 5 و 3 &lt; 10)، بۆیە <b>True</b>.'],
+['Console.WriteLine(x < 5 || x < 2);','<code>||</code> (or) یەکێک ڕاستە (3 &lt; 5)، بۆیە <b>True</b>.'],
+['Console.WriteLine(!(x < 5 && x < 10));','<code>!</code> (not) ئەنجامی True پێچەوانە دەکاتەوە، بۆیە <b>False</b>.']],
+[['int x = 20;','گۆڕاوی <code>x</code> دروست دەکات و بەهای 20 دەداتێ.'],
+['int y = 18;','گۆڕاوی <code>y</code> دروست دەکات و بەهای 18 دەداتێ.'],
+['if (x > y)','<code>if</code> مەرجێک دەپشکنێت: x گەورەترە لە y؟ (20 &gt; 18 ڕاستە).'],
+['Console.WriteLine("x is greater than y");','چونکە مەرجەکە ڕاستە، ئەم هێڵە جێبەجێ دەبێت و دەقەکە چاپ دەکات.']],
+[['if (condition1)','شێوازی گشتی: ئەگەر مەرجی یەکەم ڕاست بوو بلۆکی ژێرەوە جێبەجێ دەبێت.'],
+['else if (condition2)','ئەگەر مەرجی یەکەم هەڵە بوو، مەرجی دووەم دەپشکنێت.'],
+['else','ئەگەر هیچ مەرجێک ڕاست نەبوو بلۆکی ژێرەوە کار دەکات.'],
+['int time = 22;','گۆڕاوی <code>time</code> دروست دەکات و 22 دەیداتێ.'],
+['if (time < 10)','22 کەمترە لە 10؟ نەخێر، بۆیە بلۆکەکەی بازدەدرێت.'],
+['Console.WriteLine("Good morning.");','ئەگەر مەرجەکە ڕاست بوایە Good morning. چاپ دەکرد (بازدەدرێت).'],
+['else if (time < 20)','22 کەمترە لە 20؟ نەخێر، ئەمیش بازدەدرێت.'],
+['Console.WriteLine("Good day.");','ئەگەر مەرجەکە ڕاست بوایە Good day. چاپ دەکرد (بازدەدرێت).'],
+['else','هیچ مەرجێک ڕاست نەبوو، بۆیە <code>else</code> کار دەکات.'],
+['Console.WriteLine("Good evening.");','Good evening. چاپ دەکات.']],
+[['variable = (condition) ? expressionTrue : expressionFalse;','شێوازی گشتی: ئەگەر مەرج ڕاست بوو expressionTrue، ئەگەرنا expressionFalse دەخاتە ناو گۆڕاوەکە.'],
+['int time = 20;','گۆڕاوی <code>time</code> دروست دەکات و 20 دەیداتێ.'],
+['if (time < 18)','شێوازی درێژ: 20 کەمترە لە 18؟ نەخێر.'],
+['Console.WriteLine("Good day.");','ئەگەر مەرجەکە ڕاست بوایە Good day. چاپ دەکرد (بازدەدرێت).'],
+['else','ئەگەرنا ئەم بلۆکە کار دەکات.'],
+['Console.WriteLine("Good evening.");','Good evening. چاپ دەکات.'],
+['string result = (time < 18) ? "Good day." : "Good evening.";','شێوازی کورت: <code>string</code> واتە دەق. مەرج ڕاست نییە، بۆیە "Good evening." دەخاتە ناو <code>result</code>.'],
+['Console.WriteLine(result);','بەهای result چاپ دەکات: Good evening.']],
+[['switch(expression)','<code>switch</code> بەهای expression هەڵدەسەنگێنێت و لەگەڵ هەر case ێک بەراوردی دەکات.'],
+['case x:','ئەگەر بەهاکە یەکسان بوو بە x ئەم بەشە کار دەکات.'],
+['break;','<code>break</code> لە switch دەردەچێت.'],
+['case y:','هەمان شت بۆ y.'],
+['break;','دەردەچێت لە switch.'],
+['default:','ئەگەر هیچ case ێک یەکسان نەبوو ئەم بەشە کار دەکات.'],
+['break;','دەردەچێت لە switch.'],
+['int day = 4;','گۆڕاوی <code>day</code> دروست دەکات و 4 دەیداتێ.'],
+['switch (day)','switch بەهای day (4) دەپشکنێت.'],
+['case 1:','ئەگەر day یەکسان بێت بە 1 ئەم بەشە کار دەکات (4 یەکسان نییە، بازدەدرێت).'],
+['Console.WriteLine("Monday");','Monday چاپ دەکات (ئەگەر day=1 بوایە).'],
+['break;','دەردەچێت لە switch.'],
+['case 2:','ئەگەر day یەکسان بێت بە 2 ئەم بەشە کار دەکات (4 یەکسان نییە، بازدەدرێت).'],
+['Console.WriteLine("Tuesday");','Tuesday چاپ دەکات (ئەگەر day=2 بوایە).'],
+['break;','دەردەچێت لە switch.'],
+['case 3:','ئەگەر day یەکسان بێت بە 3 ئەم بەشە کار دەکات (4 یەکسان نییە، بازدەدرێت).'],
+['Console.WriteLine("Wednesday");','Wednesday چاپ دەکات (ئەگەر day=3 بوایە).'],
+['break;','دەردەچێت لە switch.'],
+['case 4:','day = 4 یەکسانە، بۆیە ئەم بەشە کار دەکات.'],
+['Console.WriteLine("Thursday");','Thursday چاپ دەکات.'],
+['break;','دەردەچێت لە switch و کۆتایی دێت.'],
+['case 5:','ئەگەر day یەکسان بێت بە 5 ئەم بەشە کار دەکات (4 یەکسان نییە، بازدەدرێت).'],
+['Console.WriteLine("Friday");','Friday چاپ دەکات (ئەگەر day=5 بوایە).'],
+['break;','دەردەچێت لە switch.'],
+['case 6:','ئەگەر day یەکسان بێت بە 6 ئەم بەشە کار دەکات (4 یەکسان نییە، بازدەدرێت).'],
+['Console.WriteLine("Saturday");','Saturday چاپ دەکات (ئەگەر day=6 بوایە).'],
+['break;','دەردەچێت لە switch.'],
+['case 7:','ئەگەر day یەکسان بێت بە 7 ئەم بەشە کار دەکات (4 یەکسان نییە، بازدەدرێت).'],
+['Console.WriteLine("Sunday");','Sunday چاپ دەکات (ئەگەر day=7 بوایە).'],
+['break;','دەردەچێت لە switch.']],
+[['int day = 4;','گۆڕاوی <code>day</code> دروست دەکات و 4 دەیداتێ.'],
+['switch (day)','switch بەهای day (4) دەپشکنێت.'],
+['case 6:','ئەگەر day=6 بێت (4 یەکسان نییە، بازدەدرێت).'],
+['Console.WriteLine("Today is Saturday.");','Today is Saturday. چاپ دەکات ئەگەر day=6 بوایە.'],
+['break;','دەردەچێت لە switch.'],
+['case 7:','ئەگەر day=7 بێت (بازدەدرێت).'],
+['Console.WriteLine("Today is Sunday.");','Today is Sunday. چاپ دەکات ئەگەر day=7 بوایە.'],
+['break;','دەردەچێت لە switch.'],
+['default:','هیچ case ێک یەکسان نەبوو، بۆیە ئەم بەشە کار دەکات.'],
+['Console.WriteLine("Looking forward to the Weekend.");','Looking forward to the Weekend. چاپ دەکات.'],
+['break;','دەردەچێت لە switch.']],
+[['for (statement 1; statement 2; statement 3)','شێوازی گشتی: statement 1 یەکجار پێش دەستپێک، statement 2 مەرجی بەردەوامبوون، statement 3 لەدوای هەر دووبارەبوونەوەیەک.'],
+['foreach (type variableName in arrayName)','شێوازی گشتی foreach: هەر ئەندامێکی ئارەی دەخاتە ناو variableName.'],
+['for (int i = 0; i < 5; i++)','<code>int i = 0</code> دەستپێک، <code>i &lt; 5</code> مەرجی بەردەوامبوون، <code>i++</code> هەر جارێک i یەک زیاد دەکات.'],
+['Console.WriteLine(i);','لە هەر دووبارەبوونەوەیەکدا i چاپ دەکات: 0 1 2 3 4.'],
+['string[] cars = {"Volvo", "BMW", "Ford", "Mazda"};','ئارەیەک بە ناوی <code>cars</code> دروست دەکات کە چوار دەقی تێدایە.'],
+['foreach (string i in cars)','هەر ئەندامێکی cars دەخاتە ناو <code>i</code> یەک بە یەک.'],
+['Console.WriteLine(i);','ئەندامی ئێستا چاپ دەکات: Volvo BMW Ford Mazda.']],
+[['while (condition)','شێوازی گشتی while: تا مەرجەکە ڕاست بێت بلۆکی ژێرەوە دووبارە دەکاتەوە.'],
+['do','شێوازی گشتی do/while: سەرەتا بلۆکەکە جێبەجێ دەکات.'],
+['while (condition);','پاشان مەرج دەپشکنێت؛ ئەگەر ڕاست بوو دووبارە دەکاتەوە.'],
+['int i = 0;','گۆڕاوی <code>i</code> دروست دەکات و 0 دەیداتێ.'],
+['while (i < 5)','تا i کەمتر بێت لە 5 لووپەکە بەردەوام دەبێت.'],
+['Console.WriteLine(i);','i چاپ دەکات.'],
+['i++;','i یەک زیاد دەکات — بەبێ ئەمە لووپەکە بێکۆتایی دەبێت.'],
+['int j = 0;','گۆڕاوی <code>j</code> دروست دەکات و 0 دەیداتێ.'],
+['do','<code>do</code> دەستپێکی بلۆکەکە دەکات، بەبێ پشکنینی مەرج پێشتر.'],
+['Console.WriteLine(j);','j چاپ دەکات.'],
+['j++;','j یەک زیاد دەکات.'],
+['while (j < 5);','ئێستا مەرج دەپشکنێت؛ ئەگەر j &lt; 5 ڕاست بوو دەگەڕێتەوە بۆ do. سەرنج بدە کۆتایی <code>;</code>ـی هەیە.']],
+[['for (int i = 0; i < 10; i++)','لووپی for لە 0 دەست پێدەکات تا 9.'],
+['if (i == 4)','دەپشکنێت ئایا i یەکسانە بە 4.'],
+['break;','<code>break</code> لووپەکە بە تەواوی دەوەستێنێت.'],
+['Console.WriteLine(i);','i چاپ دەکات: 0 1 2 3 (لە 4 وەستا).'],
+['for (int i = 0; i < 10; i++)','هەمان لووپی for بۆ نموونەی continue.'],
+['if (i == 4)','دەپشکنێت ئایا i یەکسانە بە 4.'],
+['continue;','<code>continue</code> تەنها ئەم دووبارەبوونەوەیە بازدەدات و دەچێتە داهاتوو.'],
+['Console.WriteLine(i);','i چاپ دەکات: 0 1 2 3 5 6 7 8 9 (4 چاپ ناکرێت).']],
+[['int i = 0;','گۆڕاوی <code>i</code> دروست دەکات و 0 دەیداتێ.'],
+['while (i < 10)','تا i کەمتر بێت لە 10 دووبارە دەبێتەوە.'],
+['Console.WriteLine(i);','i چاپ دەکات.'],
+['i++;','i یەک زیاد دەکات.'],
+['if (i == 4)','دەپشکنێت ئایا i یەکسانە بە 4.'],
+['break;','<code>break</code> لووپەکە دەوەستێنێت: 0 1 2 3 چاپ دەکرێن.'],
+['int i = 0;','بۆ نموونەی continue، i دووبارە 0 دەکاتەوە.'],
+['while (i < 10)','هەمان لووپی while.'],
+['if (i == 4)','دەپشکنێت ئایا i یەکسانە بە 4.'],
+['i++;','<b>یەکەم</b> i زیاد دەکات بۆ ئەوەی نەمێنێتەوە لە 4 (ئەگەرنا لووپەکە بێکۆتایی دەبێت).'],
+['continue;','بازدەدات بۆ دووبارەبوونەوەی داهاتوو.'],
+['Console.WriteLine(i);','i چاپ دەکات: 0 1 2 3 5 6 7 8 9.'],
+['i++;','i یەک زیاد دەکات.']],
+[['ClassName.MethodName(argument);','شێوازی بانگکردن: ناوی کلاس، خاڵ، ناوی میسۆد، و ئارگومەنت لەناو <code>()</code>.'],
+['class Program','کلاسێک بە ناوی <code>Program</code> دروست دەکات؛ هەموو کۆدەکان لەناویدان.'],
+['static void Main(string[] args)','<code>Main</code> شوێنی دەستپێکردنی بەرنامەیە.'],
+['Console.WriteLine(Math.Max(5, 10));','<code>Math.Max</code> گەورەترین بەها دەدات: 10 چاپ دەکات.'],
+['Console.WriteLine(Math.Min(5, 10));','<code>Math.Min</code> بچووکترین بەها دەدات: 5 چاپ دەکات.'],
+['Console.WriteLine(Math.Sqrt(64));','<code>Math.Sqrt</code> ڕەگی دووجا دەدات: 8 چاپ دەکات.']],
+[['class Program','کلاسی Program؛ میسۆدەکان لەناو کلاسدا دروست دەکرێن.'],
+['static void MyMethod()','شێوازی دروستکردنی میسۆد: <code>void</code> واتە شتێک ناگەڕێنێتەوە، و کۆدی ناو <code>{ }</code> کاتێک کار دەکات کە بانگ بکرێت.'],
+['static void MyMethod()','میسۆدی <code>MyMethod</code> دروست دەکات.'],
+['Console.WriteLine("I just got executed!");','ئەو کارەی میسۆدەکە دەیکات: دەقەکە چاپ دەکات.'],
+['static void Main(string[] args)','<code>Main</code> شوێنی دەستپێکردنی بەرنامەیە.'],
+['MyMethod();','یەکەم بانگکردنی میسۆدەکە: دەقەکە چاپ دەکرێت.'],
+['MyMethod();','دووەم بانگکردن: دیسان چاپ دەکرێت.'],
+['MyMethod();','سێیەم بانگکردن: سێیەم جار چاپ دەکرێت.']]
+];
+const li=(r,sn,tx)=>`<li><span class="rng">${r}</span><span>${sn?`<b class="sn${sn.length>=25?' xs':sn.length>13?' sm':''}">${esc(sn)}</b> : `:''}${tx}</span></li>`;
+function expl(e,items){const L=e.c.split('\n'),cl=[],cm=[];
+ L.forEach((l,i)=>{const t=l.trim();if(!t)return;if(t.startsWith('//'))cm.push(i+1);else cl.push({i:i+1,t:t.replace(/\s*\/\/.*$/,'').trim()});});
+ let o='';
+ if(cm.length){let s=cm[0],p=s;const r=[];
+  for(let k=1;k<cm.length;k++){if(cm[k]===p+1)p=cm[k];else{r.push(s===p?n(s):n(s)+'-'+n(p));s=p=cm[k];}}
+  r.push(s===p?n(s):n(s)+'-'+n(p));
+  o+=li(r.join('، '),'// کۆمێنت','ئەم هێڵانە کۆمێنتن؛ جێبەجێ ناکرێن و هیچ چاپ ناکرێن، تەنها بۆ خوێندنەوەی مرۆڤن.');}
+ const map={},extra=[];let cur=0;
+ for(const [sn,tx] of items){if(!sn){extra.push(tx);continue;}
+  let f=-1;for(let k=cur;k<cl.length;k++){if(cl[k].t===sn.trim()){f=k;break;}}
+  if(f<0){extra.push(tx);continue;}map[f]=tx;cur=f+1;}
+ cl.forEach((c,k)=>{const tx=map[k]||(c.t==='{'?'دەستپێکی بلۆکی کۆد؛ کۆدەکانی دوای ئەمە ئەندامی ئەم بلۆکەن.':c.t==='}'?'کۆتایی بلۆکی کۆد؛ بلۆکەکە دادەخات.':'—');o+=li(n(c.i),c.t,tx);});
+ extra.forEach(tx=>{o+=li('💡','',tx);});
+ return o;}
+const RX=/(\/\/.*)|("(?:[^"\\]|\\.)*")|\b(int|string|void|class)\b|\b(if|else|for|foreach|while|do|switch|case|break|continue|default)\b|\b(static|in)\b|\b(\d+)\b|\b(Console|Math|Program|String)\b|\b([A-Za-z_]\w*)(?=\s*\()|\b([A-Za-z_]\w*)\b|([=+\-*\/%<>!&|?:^]+)/g;
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(line){let r='',l=0,m;RX.lastIndex=0;
+ while((m=RX.exec(line))){r+=esc(line.slice(l,m.index));
+  const c=m[1]?'cmt':m[2]?'str':m[3]?'dt':m[4]?'con':m[5]?'kw':m[6]?'num':m[7]?'cls':m[8]?'fn':m[9]?'var':'op';
+  r+=`<span class="${c}">${esc(m[0])}</span>`;l=RX.lastIndex;}
+ return r+esc(line.slice(l));}
+const MORE={1:{
+c:`int a = 100;
+int b = 1;
+a += b;
+Console.WriteLine(a);`,
+o:`101`,
+intro:'لە سەرەوە <code>x += 5</code>ـمان بینی. ئێستا هەمان بیرۆکە بە نموونەیەکی نوێ دەبینین، و لەسەر هەر هێڵێک دەبینیت بەهای گۆڕاوەکان چۆن دەگۆڕێن.',
+s:[
+['کۆمپیوتەر سندوقێکی بچووک لە بیرگەدا دروست دەکات و ناوی دەنێت <code>a</code>. <code>int</code> واتە ئەم سندوقە تەنها ژمارەی تەواو دەگرێت. پاشان ژمارە 100 دەخاتە ناوی.',['a = 100']],
+['سندوقێکی دووەم بە ناوی <code>b</code> دروست دەکات و 1 دەخاتە ناوی. ئێستا دوو سندوقمان هەیە.',['a = 100','b = 1']],
+['ئەم هێڵە هەمان <code>a = a + b</code>ـە. کۆمپیوتەر سێ کار دەکات: (١) بەهای a دەخوێنێتەوە: 100. (٢) بەهای b دەخوێنێتەوە: 1. (٣) کۆیان دەکاتەوە (100 + 1 = 101) و ئەنجامەکە دەخاتە ناو a، بەهای کۆنی a (100) دەسڕدرێتەوە. سەرنج بدە: b هەروەک خۆی ماوەتەوە، تەنها a گۆڕا.',['a = 101','b = 1']],
+['بەهای ئێستای a چاپ دەکات. چونکە لە هێڵی ٣ بوو بە 101، ئەوە چاپ دەکرێت، نەک 100.',['a = 101']]
+],
+sum:'پوختە: <code>a += b</code> بەهای b دەخاتە سەر بەهای ئێستای a. بەراورد لەگەڵ نموونەی سەرەوە: لەوێ ژمارەیەکی ڕاستەوخۆ (5) زیاد کرا، لێرە بەهای گۆڕاوێکی تر (b) زیاد کرا.'}};
+function moreHtml(k){const m=MORE[k];if(!m)return '';const L=m.c.split('\n');
+ return `<button class="more-btn" onclick="toggleMore(${k},this)">ڕوونکردنەوەی زیاتر 📖</button>
+<div class="more-panel" id="more${k}"><div class="more-title">ڕوونکردنەوەی زیاتر — بە نموونەیەکی نوێ</div><p class="more-intro">${m.intro}</p>
+<div class="code-box"><div class="line-numbers">${L.map((_,i)=>`<span>${i+1}</span>`).join('')}</div><div class="code-content"><pre>${L.map(hl).join('\n')}</pre></div></div>
+<div class="output-box"><div class="output-header">:دەرەنجام &nbsp;|&nbsp; Output:</div><div class="output-content">${esc(m.o)}</div></div>
+${m.s.map(([tx,st],i)=>`<div class="st"><div class="st-h"><span class="rng">${n(i+1)}</span><b class="sn${L[i].length>=25?' xs':L[i].length>13?' sm':''}">${esc(L[i])}</b></div><p>${tx}</p><div class="st-v"><span>بەهاکان دوای ئەم هێڵە:</span>${st.map(v=>`<i class="vs">${v}</i>`).join('')}</div></div>`).join('')}
+<p class="more-sum">${m.sum}</p></div>`;}
+function toggleMore(k,b){const o=document.getElementById('more'+k).classList.toggle('open');b.textContent=o?'شاردنەوە 📕':'ڕوونکردنەوەی زیاتر 📖';}
+const tabs=document.getElementById('tabs'),views=document.getElementById('views');
+const n=i=>String(i).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+tabs.innerHTML=`<button class="tab active" onclick="showTab(0)">دەستپێک</button>`+E.map((_,i)=>`<button class="tab" onclick="showTab(${i+1})">کۆدی ${n(i+1)}</button>`).join('');
+views.innerHTML=`<div class="content active"><div class="intro"><h2>🎯 بەخێربێیت</h2><p>لێرەدا <b>${n(E.length)} نموونە</b>ی C# دەبینیت لە PDF ـەکەوە، لە پەڕەی ١٨ تا ٣٧.</p><p>هەر نموونەیەک: سەردێڕ، کۆد لەگەڵ ژمارەی هێڵ، دەرەنجام و ڕوونکردنەوە.</p><p style="font-weight:bold;color:#667eea">دوگمەکانی سەرەوە هەڵبژێرە 👆</p></div></div>`+
+E.map((e,k)=>{const L=e.c.split('\n');
+return `<div class="content"><div class="example"><div class="title-row"><div class="example-title">${e.t}</div><span class="pdf-page">${e.p}</span></div>
+<div class="code-box"><div class="line-numbers">${L.map((_,i)=>`<span>${i+1}</span>`).join('')}</div><div class="code-content"><pre>${L.map(hl).join('\n')}</pre></div></div>
+<div class="output-box"><div class="output-header">:دەرەنجام &nbsp;|&nbsp; Output:</div><div class="output-content">${esc(e.o)}</div></div>
+<div class="expl-box"><div class="expl-title">📚 ڕوونکردنەوە:</div><ul>${expl(e,EX[k])}</ul></div>${moreHtml(k)}</div></div>`}).join('');
+function showTab(i){document.querySelectorAll('.tab').forEach((t,k)=>t.classList.toggle('active',k===i));
+ document.querySelectorAll('.content').forEach((c,k)=>c.classList.toggle('active',k===i));
+ const el=k=>document.querySelectorAll('.content')[i];
+ const t=i===0?null:document.querySelectorAll('.content')[i].querySelector('.title-row');
+ if(t)t.scrollIntoView({behavior:'smooth',block:'start'});else window.scrollTo({top:0,behavior:'smooth'});}
+</script>
+</body>
+</html>
