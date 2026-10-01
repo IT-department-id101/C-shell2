@@ -829,7 +829,8 @@ function toggleMore(k,b){const o=document.getElementById('more'+k).classList.tog
 const tabs=document.getElementById('tabs'),views=document.getElementById('views');
 const n=i=>String(i).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
 tabs.innerHTML=`<button class="tab active" onclick="showTab(0)">دەستپێک</button>`+E.map((_,i)=>`<button class="tab" onclick="showTab(${i+1})">کۆدی ${n(i+1)}</button>`).join('');
-views.innerHTML=`<div class="content active"><div class="intro"><h2>🎯 بەخێربێیت</h2><p>لێرەدا <b>${n(E.length)} نموونە</b>ی C# دەبینیت لە PDF ـەکەوە، لە پەڕەی ١٨ تا ٣٧.</p><p>هەر نموونەیەک: سەردێڕ، کۆد لەگەڵ ژمارەی هێڵ، دەرەنجام و ڕوونکردنەوە.</p><p style="font-weight:bold;color:#667eea">دوگمەکانی سەرەوە هەڵبژێرە 👆</p></div></dconst L=e.c.split('\n');
+views.innerHTML=`<div class="content active"><div class="intro"><h2>🎯 بەخێربێیت</h2><p>لێرەدا <b>${n(E.length)} نموونە</b>ی C# دەبینیت لە PDF ـەکەوە، لە پەڕەی ١٨ تا ٣٧.</p><p>هەر نموونەیەک: سەردێڕ، کۆد لەگەڵ ژمارەی هێڵ، دەرەنجام و ڕوونکردنەوە.</p><p style="font-weight:bold;color:#667eea">دوگمەکانی سەرەوە هەڵبژێرە 👆</p></div></div>`+
+E.map((e,k)=>{const L=e.c.split('\n');
 return `<div class="content"><div class="example"><div class="title-row"><div class="example-title">${e.t}</div><span class="pdf-page">${e.p}</span></div>
 <div class="code-box"><div class="line-numbers">${L.map((_,i)=>`<span>${i+1}</span>`).join('')}</div><div class="code-content"><pre>${L.map(hl).join('\n')}</pre></div></div>
 <div class="output-box"><div class="output-header">:دەرەنجام &nbsp;|&nbsp; Output:</div><div class="output-content">${esc(e.o)}</div></div>
