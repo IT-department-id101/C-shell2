@@ -138,7 +138,7 @@ function moreHtml(k){const m=MORE[k];if(!m)return '';const L=m.c.split('\n'),map
 <div class="code-box"><div class="line-numbers">${L.map((_,i)=>`<span>${i+1}</span>`).join('')}</div><div class="code-content"><pre>${L.map(hl).join('\n')}</pre></div></div>
 <div class="output-box"><div class="output-header">:دەرەنجام &nbsp;|&nbsp; Output:</div><div class="output-content">${esc(m.o)}</div></div>
 ${cards}<p class="more-sum">${m.sum}</p></div>`;}
-function toggleMore(k,b){const o=document.getElementById('more'+k).classList.toggle('open');b.textContent=o?'شاردنەوە 📕':'ڕوونکردنەوەی زیاتر 📖';if(k===6){if(!o){PS[1].on=false;PS[1].wide=false;pinApply(1);}pinSync();}}
+function toggleMore(k,b){const o=document.getElementById('more'+k).classList.toggle('open');b.textContent=o?'شاردنەوە 📕':'ڕوونکردنەوەی زیاتر 📖';if(k===curTab-1){if(!o){PS[1].on=false;PS[1].wide=false;pinApply(1);}pinSync();}}
 const tabs=document.getElementById('tabs'),views=document.getElementById('views');
 const n=i=>String(i).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
 tabs.innerHTML=`<button class="tab active" onclick="showTab(0)">دەستپێک</button>`+E.map((_,i)=>`<button class="tab" onclick="showTab(${i+1})">کۆدی ${n(i+1)}</button>`).join('');
@@ -149,14 +149,15 @@ return `<div class="content"><div class="example"><div class="title-row"><div cl
 <div class="output-box"><div class="output-header">:دەرەنجام &nbsp;|&nbsp; Output:</div><div class="output-content">${esc(e.o)}</div></div>
 <div class="expl-box"><div class="expl-title">📚 ڕوونکردنەوە:</div><div class="walk"><span class="wl">کارەکەی ئەم کۆدە بەم شێوەیە:</span>${EXSUM[k]}</div><ul>${expl(e,EX[k])}</ul></div>${moreHtml(k)}</div></div>`}).join('');
 let curTab=0,inMore=false;const PS=[{on:false,wide:false,lp:false,t:null,w:'pinWrap',x:'pinTxt'},{on:false,wide:false,lp:false,t:null,w:'pinWrap2',x:'pinTxt2'}];
-function pinBox(n){const c=document.querySelectorAll('.content')[7];return c&&c.querySelector(n?'#more6 .code-box':'.example > .code-box');}
+function pinBox(n){const c=document.querySelectorAll('.content')[curTab];return c&&c.querySelector(n?'#more'+(curTab-1)+' .code-box':'.example > .code-box');}
 function pinApply(n){const q=PS[n];document.getElementById(q.w).classList.toggle('on',q.on);document.getElementById(q.x).textContent=!q.on?'pin':q.wide?'pinned · full':'pinned';pinSync();}
 function pinFree(b){b.classList.remove('pinned','wide');b.style.left='';b.style.width='';b.style.top='';if(b._sp){b._sp.remove();b._sp=null;}}
 function pinSync(){const w1=document.getElementById('pinWrap'),w2=document.getElementById('pinWrap2');
- if(curTab!==7){w1.classList.remove('show');w2.classList.remove('show');[0,1].forEach(n=>{const b=pinBox(n);if(b)pinFree(b);});return;}
- const m=document.getElementById('more6');inMore=false;
+ if(curTab<1){w1.classList.remove('show');w2.classList.remove('show');[0,1].forEach(n=>{const b=pinBox(n);if(b)pinFree(b);});return;}
+ const m=document.getElementById('more'+(curTab-1));inMore=false;
  if(m&&m.classList.contains('open')){const r=m.getBoundingClientRect();inMore=r.top<window.innerHeight*0.55&&r.bottom>120;}
- w1.classList.toggle('show',!inMore);w2.classList.toggle('show',inMore);
+ const b0=pinBox(0);let mainIn=false;if(b0&&b0.parentNode){const nr=(b0._sp||b0).getBoundingClientRect(),pr=b0.parentNode.getBoundingClientRect();mainIn=nr.top<window.innerHeight*0.6&&pr.bottom>200;}
+ w1.classList.toggle('show',mainIn&&!inMore);w2.classList.toggle('show',inMore);
  [0,1].forEach(n=>{const q=PS[n],b=pinBox(n);if(!b)return;const cont=n?m:b.parentNode;
   if(!cont||(n&&!m.classList.contains('open'))){pinFree(b);return;}
   const nat=(b._sp||b).getBoundingClientRect(),cr=cont.getBoundingClientRect(),want=q.on&&(n?inMore:!inMore);
@@ -170,8 +171,9 @@ function pinSync(){const w1=document.getElementById('pinWrap'),w2=document.getEl
 function pinClick(n){const q=PS[n];if(q.lp){q.lp=false;return;}q.on=!q.on;if(!q.on)q.wide=false;pinApply(n);}
 function pinDown(n){const q=PS[n];q.lp=false;clearTimeout(q.t);q.t=setTimeout(()=>{if(q.on){q.lp=true;q.wide=!q.wide;pinApply(n);if(navigator.vibrate)navigator.vibrate(40);}},700);}
 function pinUp(n){clearTimeout(PS[n].t);}
+function pinReset(){if(curTab>=1)[0,1].forEach(n=>{const b=pinBox(n);if(b)pinFree(b);});PS.forEach(q=>{q.on=false;q.wide=false;document.getElementById(q.w).classList.remove('on');document.getElementById(q.x).textContent='pin';});}
 window.addEventListener('scroll',pinSync,{passive:true});window.addEventListener('resize',pinSync);
-function showTab(i){curTab=i;pinSync();setTimeout(pinSync,450);document.querySelectorAll('.tab').forEach((t,k)=>t.classList.toggle('active',k===i));
+function showTab(i){pinReset();curTab=i;pinSync();setTimeout(pinSync,450);document.querySelectorAll('.tab').forEach((t,k)=>t.classList.toggle('active',k===i));
  document.querySelectorAll('.content').forEach((c,k)=>c.classList.toggle('active',k===i));
  const el=k=>document.querySelectorAll('.content')[i];
  const t=i===0?null:document.querySelectorAll('.content')[i].querySelector('.title-row');
